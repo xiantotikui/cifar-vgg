@@ -18,4 +18,5 @@ References:
 [2] Shuying Liu and Weihong Deng. Very deep convolutional neural network based image classifi- cation using small training sample size. In Pattern Recognition (ACPR), 2015 3rd IAPR Asian Conference on, pages 730–734. IEEE, 2015.
 
 
-
+Added denoiser to cifar100
+model.add(Lambda(lambda x: K.switch(K.less(x, K.constant(0.1)), x * 0.0, x)))
