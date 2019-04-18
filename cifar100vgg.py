@@ -1,4 +1,3 @@
-
 from __future__ import print_function
 import keras
 from keras.datasets import cifar100
@@ -42,6 +41,7 @@ class cifar100vgg:
         model.add(BatchNormalization())
 
         model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Lambda(lambda x: K.switch(K.less(x, K.constant(0.1)), x * 0.0, x)))
 
         model.add(Conv2D(128, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
         model.add(Activation('relu'))
@@ -53,6 +53,7 @@ class cifar100vgg:
         model.add(BatchNormalization())
 
         model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Lambda(lambda x: K.switch(K.less(x, K.constant(0.1)), x * 0.0, x)))
 
         model.add(Conv2D(256, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
         model.add(Activation('relu'))
@@ -69,24 +70,7 @@ class cifar100vgg:
         model.add(BatchNormalization())
 
         model.add(MaxPooling2D(pool_size=(2, 2)))
-
-
-        model.add(Conv2D(512, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
-        model.add(Activation('relu'))
-        model.add(BatchNormalization())
-        model.add(Dropout(0.4))
-
-        model.add(Conv2D(512, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
-        model.add(Activation('relu'))
-        model.add(BatchNormalization())
-        model.add(Dropout(0.4))
-
-        model.add(Conv2D(512, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
-        model.add(Activation('relu'))
-        model.add(BatchNormalization())
-
-        model.add(MaxPooling2D(pool_size=(2, 2)))
-
+        model.add(Lambda(lambda x: K.switch(K.less(x, K.constant(0.1)), x * 0.0, x)))
 
         model.add(Conv2D(512, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
         model.add(Activation('relu'))
@@ -103,6 +87,24 @@ class cifar100vgg:
         model.add(BatchNormalization())
 
         model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Lambda(lambda x: K.switch(K.less(x, K.constant(0.1)), x * 0.0, x)))
+
+        model.add(Conv2D(512, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
+        model.add(Activation('relu'))
+        model.add(BatchNormalization())
+        model.add(Dropout(0.4))
+
+        model.add(Conv2D(512, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
+        model.add(Activation('relu'))
+        model.add(BatchNormalization())
+        model.add(Dropout(0.4))
+
+        model.add(Conv2D(512, (3, 3), padding='same',kernel_regularizer=regularizers.l2(weight_decay)))
+        model.add(Activation('relu'))
+        model.add(BatchNormalization())
+
+        model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Lambda(lambda x: K.switch(K.less(x, K.constant(0.1)), x * 0.0, x)))
         model.add(Dropout(0.5))
 
         model.add(Flatten())
@@ -196,7 +198,7 @@ class cifar100vgg:
                                          batch_size=batch_size),
                             steps_per_epoch=x_train.shape[0] // batch_size,
                             epochs=maxepoches,
-                            validation_data=(x_test, y_test),callbacks=[reduce_lr],verbose=2)
+                            validation_data=(x_test, y_test),callbacks=[reduce_lr],verbose=1)
         model.save_weights('cifar100vgg.h5')
         return model
 
@@ -214,8 +216,3 @@ if __name__ == '__main__':
     residuals = (np.argmax(predicted_x,1)!=np.argmax(y_test,1))
     loss = sum(residuals)/len(residuals)
     print("the validation 0/1 loss is: ",loss)
-
-
-
-
-
